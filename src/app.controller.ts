@@ -16,7 +16,6 @@ export class AppController {
   @UseGuards(AuthGuard('local'))
   login(@Request() req): string {
     return this.authService.generateToken(req.user);
-    // return req.user;
   }
 
   // For Authorization
