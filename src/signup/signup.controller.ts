@@ -8,7 +8,7 @@ export class SignupController {
 
   @Post()
   signup(@Body() signupDto: SignupDto) {
-    this.signupService.signup(signupDto);
-    return 'valid';
+    const res = this.signupService.signup(signupDto);
+    return res;
   }
 }

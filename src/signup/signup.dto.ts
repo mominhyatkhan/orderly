@@ -1,5 +1,7 @@
 export class SignupDto {
-  readonly username: string;
   readonly email: string;
   readonly password: string;
+  readonly confirmation: boolean;
+  readonly role: string;
+  readonly emailVerificationToken: string;
 }

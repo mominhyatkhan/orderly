@@ -9,6 +9,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { EmailController } from './email/email.controller';
 import { join } from 'path';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { TransactionsModule } from './transactions/transactions.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
     SignupModule,
     UserModule,
     AuthModule,
+    TransactionsModule,
     MailerModule.forRoot({
       transport: {
         host: 'smtp.sendgrid.net',

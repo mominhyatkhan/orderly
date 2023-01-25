@@ -6,12 +6,12 @@ export class EmailController {
   constructor(private mailService: MailerService) {}
 
   @Get('email-verification')
-  async plainTextEmail(@Query('toemail') toemail) {
+  async plainTextEmail(@Query('toemail') toemail: string) {
     await this.mailService.sendMail({
       to: toemail,
       from: 'mominhyatkhansm@gmail.com',
       subject: 'Welcome',
-      text: 'Congratulations! You are not selected. xD',
+      text: 'Congratulations! You are not selected again. xD',
     });
     return 'success';
   }
