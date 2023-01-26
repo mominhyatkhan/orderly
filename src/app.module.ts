@@ -10,6 +10,11 @@ import { EmailController } from './email/email.controller';
 import { join } from 'path';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { TransactionsModule } from './transactions/transactions.module';
+import { ItemController } from './item/item.controller';
+import { ItemService } from './item/item.service';
+import { ItemModule } from './item/item.module';
+import { EmailService } from './email/email.service';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -33,8 +38,10 @@ import { TransactionsModule } from './transactions/transactions.module';
         adapter: new HandlebarsAdapter(),
       },
     }),
+    // ItemModule,
+    EmailModule,
   ],
-  controllers: [AppController, EmailController],
+  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}

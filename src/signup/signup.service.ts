@@ -6,12 +6,6 @@ import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
 import { SignupDto } from './signup.dto';
 
-// interface User {
-//   // username: string;
-//   email: string;
-//   password: string;
-// }
-
 @Injectable()
 export class SignupService {
   constructor(

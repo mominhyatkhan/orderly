@@ -1,7 +1,13 @@
+import { IsEmail, IsStrongPassword } from 'class-validator';
+
 export class SignupDto {
-  readonly email: string;
-  readonly password: string;
-  readonly confirmation: boolean;
-  readonly role: string;
-  readonly emailVerificationToken: string;
+  @IsEmail()
+  email: string;
+
+  @IsStrongPassword()
+  password: string;
+
+  confirmation: boolean;
+  role: string;
+  emailVerificationToken: string;
 }
