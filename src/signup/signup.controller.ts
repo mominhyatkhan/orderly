@@ -38,12 +38,19 @@ export class SignupController {
   }
 
   @Get('/verify')
-  async verifyEmail(@Query('token') token: any) {
-    return await this.signupService.verifyEmail(token);
+  async verifyEmail(@Query('token') token: any, @Res() res) {
+    const verifiedUser = await this.signupService.verifyEmail(token);
+    if (verifiedUser) {
+      res.redirect('http://localhost:3000/passwordPage');
+      return verifiedUser;
+    } else {
+      console.log('Token not matched');
+      return false;
+    }
   }
 
   @Get('/fetch-verified-user')
-  async findUserByEmail(@Body('email') email: string) {
+  async findUserByEmail(@Query('email') email: string) {
     return await this.signupService.findUserByEmail(email);
   }
 
@@ -60,8 +67,11 @@ export class SignupController {
   }
 
   @Get('login')
-  async loggedIn(@Body() body: SignupDto) {
-    const { email, password } = body;
+  async loggedIn(
+    @Query('email') email: string,
+    @Query('password') password: string,
+  ) {
+    // const { email, password } = body;
     // if (!email && password) {
     //   throw new BadRequestException('Email and password are required');
     // }
