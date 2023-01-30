@@ -28,6 +28,7 @@ export class SignupService {
     const newUser = new this.signupModel({
       email: user.email,
       password: null,
+      role: 'user',
       emailVerification: token,
       emailVerified: false,
     });
@@ -81,7 +82,7 @@ export class SignupService {
       _user.emailVerified = true;
       await _user.save();
       console.log('NEW USER', _user);
-      return 'Value updated in DB. GO BACK TO THE WEBSITE AND SET YOUR PASSWORD';
+      return _user;
     } else {
       console.log('Invalid token! Cannot Verified');
       return false;

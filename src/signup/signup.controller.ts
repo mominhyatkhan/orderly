@@ -42,6 +42,11 @@ export class SignupController {
     return await this.signupService.verifyEmail(token);
   }
 
+  @Get('/fetch-verified-user')
+  async findUserByEmail(@Body('email') email: string) {
+    return await this.signupService.findUserByEmail(email);
+  }
+
   @Post('/set-password')
   async setPassword(
     // @Body('token') token: any,
