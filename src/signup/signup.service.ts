@@ -8,14 +8,14 @@ import { SignupDto } from './signup.dto';
 import * as sendgrid from '@sendgrid/mail';
 import { Router } from 'express';
 
-export interface StoredSignup {
-  email: string;
-  password: any;
-  emailVerification: string;
-  emailVerified: boolean;
-  role: string;
-  // other properties that are stored in the database
-}
+// export interface StoredSignup {
+//   email: string;
+//   password: any;
+//   emailVerification: string;
+//   emailVerified: boolean;
+//   role: string;
+//   // other properties that are stored in the database
+// }
 @Injectable()
 export class SignupService {
   router: any;
@@ -99,6 +99,22 @@ export class SignupService {
     return true;
   }
 
+  async loggedIn(email: string, password: any): Promise<SignupDto> {
+    const user = await this.findUserByEmail(email);
+    console.log('service loggin func: ', user);
+
+    if (!user) {
+      return Promise.reject(new Error('User not found'));
+    } else {
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (isMatch) {
+        return Promise.resolve(user);
+      } else {
+        return Promise.reject(new Error('Incorrect password'));
+      }
+    }
+  }
+
   async findUserByEmailToken(token: any): Promise<SignupModel> {
     const user: SignupModel = await this.signupModel
       .findOne({ emailVerification: token })
@@ -106,6 +122,18 @@ export class SignupService {
     if (!user) {
       console.log('Invalid token! User not found');
       return Promise.reject(new Error('Invalid token! User not found'));
+    } else {
+      return Promise.resolve(user);
+    }
+  }
+
+  async findUserByEmail(email: string): Promise<SignupModel> {
+    const user: SignupModel = await this.signupModel
+      .findOne({ email: email })
+      .exec();
+    if (!user) {
+      console.log('Invalid Email! User not found');
+      return Promise.reject(new Error('Invalid Email! User not found'));
     } else {
       return Promise.resolve(user);
     }

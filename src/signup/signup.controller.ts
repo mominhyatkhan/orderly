@@ -7,12 +7,13 @@ import {
   Res,
   forwardRef,
   Inject,
+  BadRequestException,
 } from '@nestjs/common';
 import { SignupDto } from './signup.dto';
 import * as crypto from 'crypto';
 import { SignupService } from './signup.service';
 
-@Controller('signup') //localhost:8000/signup
+@Controller('user') //localhost:8000/user/signup
 export class SignupController {
   constructor(
     //   private readonly signupService: SignupService,
@@ -23,7 +24,7 @@ export class SignupController {
     private _token,
   ) {}
 
-  @Post()
+  @Post('signup')
   async signup(@Body() signupDto: SignupDto) {
     const hmac = crypto.createHmac('sha256', 'orderly');
     const token = hmac.update(signupDto.email).digest('hex');
@@ -51,5 +52,17 @@ export class SignupController {
     } else {
       console.log('CANNOT ACCESS THIS LINK WITHOUT SIGNING UP');
     }
+  }
+
+  @Get('login')
+  async loggedIn(@Body() body: SignupDto) {
+    const { email, password } = body;
+    // if (!email && password) {
+    //   throw new BadRequestException('Email and password are required');
+    // }
+    console.log('hitting login', password);
+
+    const user = await this.signupService.loggedIn(email, password);
+    return user;
   }
 }

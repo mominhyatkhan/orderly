@@ -7,7 +7,7 @@ export class SignupDto {
   @IsStrongPassword()
   password: string;
 
-  confirmation: boolean;
+  emailVerified: boolean;
   role: string;
-  emailVerificationToken: string;
+  emailVerification: string;
 }
