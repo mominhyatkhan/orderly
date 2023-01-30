@@ -5,14 +5,16 @@ import { Document } from 'mongoose';
 export class Signup {
   @Prop({ unique: true })
   email: string;
+  @Prop({ default: null })
+  password: string;
   @Prop({ unique: true })
   emailVerification: string;
   @Prop()
   Password: string;
-  @Prop({ default: false })
-  confirmation: boolean;
   @Prop({ default: 'user' })
   role: string;
+  @Prop({ default: false })
+  emailVerified: boolean;
 }
 
 export type SignupModel = Signup & Document;

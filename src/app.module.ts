@@ -6,15 +6,11 @@ import { SignupModule } from './signup/signup.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { EmailController } from './email/email.controller';
 import { join } from 'path';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { TransactionsModule } from './transactions/transactions.module';
-import { ItemController } from './item/item.controller';
-import { ItemService } from './item/item.service';
 import { ItemModule } from './item/item.module';
-import { EmailService } from './email/email.service';
-import { EmailModule } from './email/email.module';
+// import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -30,7 +26,7 @@ import { EmailModule } from './email/email.module';
         host: 'smtp.sendgrid.net',
         auth: {
           user: 'apikey',
-          pass: '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',
+          pass: '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',
         },
       },
       template: {
@@ -39,7 +35,7 @@ import { EmailModule } from './email/email.module';
       },
     }),
     // ItemModule,
-    EmailModule,
+    // EmailModule,
   ],
   controllers: [AppController],
   providers: [AppService],

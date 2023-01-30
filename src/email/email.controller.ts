@@ -1,10 +1,16 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import * as crypto from 'crypto';
+// import { SignupService, StoredSignup } from 'src/signup/signup.service';
 import { EmailService } from './email.service';
 
 @Controller('verify')
 export class EmailController {
   constructor(private readonly emailVerificationService: EmailService) {}
+
+  // @Get(':id')
+  // async getProfile(@Param('email') email: string): Promise<StoredSignup> {
+  //   return this.signupService.findByEmail(email);
+  // }
 
   @Get('/email')
   async sendVerificationEmail(@Query('email') email: string) {
