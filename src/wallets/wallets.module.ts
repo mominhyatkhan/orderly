@@ -19,7 +19,7 @@ import { Module } from '@nestjs/common';
 import { SignupModule } from '../signup/signup.module';
 import { WalletsController } from './wallets.controller';
 import { WalletService } from './wallets.service';
-import { WalletSchema, WalletModel } from './wallets.schema';
+import { WalletSchema } from './wallets.schema';
 import { MongooseModule } from '@nestjs/mongoose';
 import { SignupService } from '../signup/signup.service';
 import { SignupSchema } from '../signup/signup.model';

@@ -1,32 +1,17 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Signup } from '../signup/signup.model';
-
-import { SignupService } from 'src/signup/signup.service';
 import { WalletDto } from './wallet.dto';
-import { SignupDto } from 'src/signup/signup.dto';
+// import { WalletDto } from './wallets.dto';
 
 @Injectable()
 export class WalletService {
   constructor(
-    // @InjectModel('Signup')
-    // private signupModel: Model<SignupModel>,
-
-    // @Inject(forwardRef(() => SignupService))
-    // @InjectModel('Signup', 'user')
-    // private userModel: Model<Signup>,
-
     @InjectModel('Wallet')
     private walletModel: Model<WalletDto>,
   ) {}
 
   async createWallet(email: string, address: string, chain: string) {
-    // const user: any = await this.userModel.findOne({ email: email });
-    // if (!user) {
-    //   throw new Error('User with email "${email}" not found');
-    // }
-
     const createdWallet = new this.walletModel({
       address,
       chain,
@@ -36,16 +21,15 @@ export class WalletService {
     return createdWallet;
   }
 
-  async fetchWallet(email: string): Promise<WalletDto> {
-    const wallet: WalletDto = await this.walletModel
-      .findOne({ email: email })
-      .exec();
-    if (!wallet) {
+  async getWalletsByEmail(email: string): Promise<WalletDto> {
+    const wallets: any = await this.walletModel.find({ email: email }).exec();
+    if (!wallets) {
       return Promise.reject(
         new Error('Invalid Email! No wallets found for this email'),
       );
     } else {
-      return Promise.resolve(wallet);
+      console.log(wallets);
+      return Promise.resolve(wallets);
     }
   }
 

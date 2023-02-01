@@ -19,13 +19,15 @@ export class WalletsController {
     const u = await this.userModel.findUserByEmail(email);
     if (u) {
       await this.walletService.createWallet(email, address, chain);
+    } else {
+      return "Email doesn't exist";
     }
     // await createdWallet.save();
     return 'Data stored in array successfully';
   }
 
-  @Get('fetch-wallets')
-  async fetchWallet(@Query('email') email: string) {
-    return await this.walletService.fetchWallet(email);
+  @Get('get-wallets')
+  async getWalletsByEmail(@Query('email') email: string) {
+    return await this.walletService.getWalletsByEmail(email);
   }
 }

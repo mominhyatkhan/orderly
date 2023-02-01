@@ -1,35 +1,35 @@
-// import { Schema, Types, model } from 'mongoose';
-
-// export const UserSchema = new Schema({
-//   name: String,
-// });
-
-// export const WalletSchema = new Schema({
-//   address: String,
-//   chain: String,
-//   user: {
-//     type: Types.ObjectId,
-//     ref: 'User',
-//   },
-// });
-
-// export const User = model('User', UserSchema);
-// export const Wallet = model('Wallet', WalletSchema);
-
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, model } from 'mongoose';
+import { BadRequestException } from '@nestjs/common';
 
 @Schema()
-export class Wallet {
-  @Prop({ unique: true })
+export class Wallet extends Document {
+  @Prop({ required: true })
   address: string;
 
   @Prop({ required: true })
   chain: string;
 
-  @Prop({ ref: 'Signup', unique: true })
+  @Prop({ required: true })
   email: string;
 }
 
-export type WalletModel = Wallet & Document;
 export const WalletSchema = SchemaFactory.createForClass(Wallet);
+
+// const WalletModel = model('Wallet', WalletSchema);
+
+// WalletSchema.pre('save', async function (next) {
+//   // const wallet = this;
+//   const existingWallet = await WalletModel.findOne({
+//     address: this.address,
+//     chain: this.chain,
+//   });
+
+//   if (existingWallet) {
+//     throw new BadRequestException(
+//       'Address and chain combination already exists',
+//     );
+//   }
+
+//   next();
+// });
