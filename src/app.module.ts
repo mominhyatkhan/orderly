@@ -11,12 +11,16 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 import { TransactionsModule } from './transactions/transactions.module';
 import { ItemModule } from './item/item.module';
 // import { EmailModule } from './email/email.module';
+import { WalletsController } from './wallets/wallets.controller';
+import { WalletsModule } from './wallets/wallets.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
     MongooseModule.forRoot(
       'mongodb+srv://momin:momin123@openly_db.wozgerr.mongodb.net/?retryWrites=true&w=majority',
     ),
+    ConfigModule.forRoot({ ignoreEnvFile: true, isGlobal: true }),
     SignupModule,
     UserModule,
     AuthModule,
@@ -26,7 +30,7 @@ import { ItemModule } from './item/item.module';
         host: 'smtp.sendgrid.net',
         auth: {
           user: 'apikey',
-          pass: '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',
+          pass: process.env.SENDGRIDAPIKEY,
         },
       },
       template: {
@@ -34,6 +38,7 @@ import { ItemModule } from './item/item.module';
         adapter: new HandlebarsAdapter(),
       },
     }),
+    WalletsModule,
     // ItemModule,
     // EmailModule,
   ],

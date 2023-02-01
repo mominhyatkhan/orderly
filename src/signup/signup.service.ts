@@ -8,6 +8,8 @@ import { SignupDto } from './signup.dto';
 import * as sendgrid from '@sendgrid/mail';
 import { Router } from 'express';
 
+const sendgridKey = process.env.SENDGRIDAPIKEY;
+
 // export interface StoredSignup {
 //   email: string;
 //   password: any;
@@ -43,10 +45,7 @@ export class SignupService {
 
   async sendVerificationEmail(to: string, token: any) {
     // configure the SendGrid API key
-    // mohib's sendgrid key: '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'
-    sendgrid.setApiKey(
-      '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',
-    );
+    sendgrid.setApiKey(sendgridKey);
     try {
       // construct the email message
       const message = {
