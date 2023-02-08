@@ -14,6 +14,7 @@ import { ItemModule } from './item/item.module';
 import { WalletsController } from './wallets/wallets.controller';
 import { WalletsModule } from './wallets/wallets.module';
 import { ConfigModule } from '@nestjs/config';
+import { InvestmentModule } from './investment/investment.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { ConfigModule } from '@nestjs/config';
     UserModule,
     AuthModule,
     TransactionsModule,
+    InvestmentModule,
     MailerModule.forRoot({
       transport: {
         host: 'smtp.sendgrid.net',
