@@ -15,6 +15,10 @@ import { WalletsController } from './wallets/wallets.controller';
 import { WalletsModule } from './wallets/wallets.module';
 import { ConfigModule } from '@nestjs/config';
 import { InvestmentModule } from './investment/investment.module';
+import { ContactModule } from './contact/contact.module';
+import { GroupModule } from './group/group.module';
+import { GroupListController } from './group_list/groupList.controller';
+import { GroupListModule } from './group_list/groupList.module';
 
 @Module({
   imports: [
@@ -24,7 +28,10 @@ import { InvestmentModule } from './investment/investment.module';
     ConfigModule.forRoot({ ignoreEnvFile: true, isGlobal: true }),
     SignupModule,
     UserModule,
+    ContactModule,
     AuthModule,
+    GroupModule,
+    GroupListModule,
     TransactionsModule,
     InvestmentModule,
     MailerModule.forRoot({
