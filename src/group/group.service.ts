@@ -18,8 +18,8 @@ export class GroupService {
     await group.save();
     return group;
   }
-  async getGroup(email: string): Promise<GroupDto> {
-    const group: any = await this.groupModel.find({ email: email }).exec();
+  async getGroup(email: string,name:string): Promise<GroupDto> {
+    const group: any = await this.groupModel.find({ email: email ,name:name}).exec();
     if (group) return Promise.resolve(group);
     else
       return Promise.reject(new Error('Invalid Email! Or no Group added yet '));

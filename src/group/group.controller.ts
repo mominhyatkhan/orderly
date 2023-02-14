@@ -43,7 +43,7 @@ export class GroupController {
   }
 
   @Get('get-group')
-  async getGroup(@Query('email') email: string) {
-    return this.groupservice.getGroup(email);
+  async getGroup(@Query('email') email: string,@Query('name') name:string) {
+    return this.groupservice.getGroup(email,name);
   }
 }
