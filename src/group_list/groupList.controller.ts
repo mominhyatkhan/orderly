@@ -48,5 +48,9 @@ import { GroupListService } from './groupList.service';
     async getGroup(@Query('email') email: string) {
       return this.grouplistservice.getGroupList(email);
     }
+    @Post('delete-from-group-list')
+    async deleteFromGroupList(@Query('email') email: string,@Query('name') name:string) {
+      return this.grouplistservice.deleteFromGroupList(email,name);
+    }
   }
   

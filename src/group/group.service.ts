@@ -38,4 +38,11 @@ export class GroupService {
     else
       return Promise.reject(new Error('Invalid Email! Or no Group added yet '));
   }
+  async deleteGroup(email: string,name:string): Promise<GroupDto> {
+    const group: any = await this.groupModel.deleteMany({ email: email ,name:name}).exec();
+    console.log(group)
+    if (group) return Promise.resolve(group);
+    else
+      return Promise.reject(new Error('Invalid Email! Or no Group added yet '));
+  }
 }

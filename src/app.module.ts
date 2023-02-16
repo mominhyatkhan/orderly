@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -19,13 +19,16 @@ import { ContactModule } from './contact/contact.module';
 import { GroupModule } from './group/group.module';
 import { GroupListController } from './group_list/groupList.controller';
 import { GroupListModule } from './group_list/groupList.module';
-
+import { Module } from '@nestjs/common';
+import { ScheduleModule } from '@nestjs/schedule';
+import { MyCronJob } from './mycron';
 @Module({
   imports: [
     MongooseModule.forRoot(
       'mongodb+srv://momin:momin123@openly_db.wozgerr.mongodb.net/?retryWrites=true&w=majority',
     ),
     ConfigModule.forRoot({ ignoreEnvFile: true, isGlobal: true }),
+    ScheduleModule.forRoot(),
     SignupModule,
     UserModule,
     ContactModule,
@@ -52,6 +55,6 @@ import { GroupListModule } from './group_list/groupList.module';
     // EmailModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,MyCronJob],
 })
-export class AppModule {}
+export class AppModule { }

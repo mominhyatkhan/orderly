@@ -27,4 +27,12 @@ export class GroupListService {
         new Error('Invalid Email! Or no Group added yet '),
       );
   }
+  async deleteFromGroupList(email: string,name:string): Promise<GroupListDto> {
+    const group: any = await this.groupModel.deleteOne({ email: email,name:name } ).exec();
+    if (group) return Promise.resolve(group);
+    else
+      return Promise.reject(
+        new Error('Invalid Email! Or no Group added yet '),
+      );
+  }
 }

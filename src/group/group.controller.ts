@@ -67,4 +67,14 @@ export class GroupController {
       return error
     }
   }
+  @Post('delete-group')
+  async deletegroup(@Query('email') email:string,@Query('name') name:string ) {
+    
+    try {
+      await this.groupService.deleteGroup(email,name);
+ 
+    } catch (error) {
+      return error
+    }
+  }
 }
