@@ -1,4 +1,3 @@
-
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -25,11 +24,13 @@ import { MyCronJob } from './mycron';
 @Module({
   imports: [
     MongooseModule.forRoot(
-      'mongodb+srv://momin:momin123@openly_db.wozgerr.mongodb.net/?retryWrites=true&w=majority',
+      'mongodb+srv://momin:momin123@openly_db.wozgerr.mongodb.net/test',
     ),
+
     ConfigModule.forRoot({ ignoreEnvFile: true, isGlobal: true }),
     ScheduleModule.forRoot(),
     SignupModule,
+    WalletsModule,
     UserModule,
     ContactModule,
     AuthModule,
@@ -50,11 +51,11 @@ import { MyCronJob } from './mycron';
         adapter: new HandlebarsAdapter(),
       },
     }),
-    WalletsModule,
+
     // ItemModule,
     // EmailModule,
   ],
   controllers: [AppController],
-  providers: [AppService,MyCronJob],
+  providers: [AppService, MyCronJob],
 })
-export class AppModule { }
+export class AppModule {}

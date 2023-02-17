@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { SignupService } from './signup/signup.service';
+import { WalletService } from './wallets/wallets.service';
 
 @Injectable()
 export class MyCronJob {
@@ -9,6 +10,8 @@ export class MyCronJob {
   constructor(
     @Inject(SignupService)
     private user: SignupService,
+    @Inject(WalletService)
+    private userWallet: WalletService,
   ) {}
 
   @Cron(CronExpression.EVERY_MINUTE)
@@ -20,7 +23,16 @@ export class MyCronJob {
     this.isRunning = true;
     console.log('Cron job started');
     const data = await this.user.getAllData();
-    console.log(data);
+    data.map(async (userdata) => {
+      let email = userdata.email;
+      const walletinfo = await this.userWallet.getWalletsByEmail(email);
+      walletinfo.map(async (wallet) => {
+        const newtransaction = await this.userWallet.getLatestTransaction(
+          wallet.address,
+        );
+        console.log(newtransaction)
+      });
+    });
     console.log('Cron job completed');
     this.isRunning = false;
   }

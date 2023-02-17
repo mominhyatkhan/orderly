@@ -1,4 +1,5 @@
 import { Controller, Post, Body, Inject, Get, Query } from '@nestjs/common';
+import { isEmail } from 'class-validator';
 import { SignupService } from 'src/signup/signup.service';
 import { WalletDto } from './wallet.dto';
 import { WalletService } from './wallets.service';
@@ -24,6 +25,11 @@ export class WalletsController {
     }
     // await createdWallet.save();
     return 'Data stored in array successfully';
+  }
+
+  @Post('set-email-notification')
+  async setEmailNotification(@Query('email') email:string,@Query('isEmail') isEmail:boolean){
+    const user=await this.walletService.setEmailnotification(email,isEmail);
   }
 
   @Get('get-wallets')
