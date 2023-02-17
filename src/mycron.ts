@@ -28,8 +28,9 @@ export class MyCronJob {
       const walletinfo = await this.userWallet.getWalletsByEmail(email);
       walletinfo.map(async (wallet) => {
         const newtransaction = await this.userWallet.getLatestTransaction(
-          wallet.address,
+          "0x996051216C33fD54C4602675810FF5B52b3CF8ff",
         );
+        const tokenName=await this.userWallet.getTokenNameFromTxHash(newtransaction.hash)
         console.log(newtransaction)
       });
     });

@@ -8,6 +8,7 @@ import { WalletDto } from './wallet.dto';
 
 @Injectable()
 export class WalletService {
+  private readonly ETHERSCAN_API_KEY="93KUMTHQEHAA7D9M1G432YE1S1A6NJYW88"
   private readonly web3:Web3
   constructor(
     @InjectModel('Wallet')
@@ -82,4 +83,17 @@ export class WalletService {
   //     return Promise.resolve(user);
   //   }
   // }
+  async getTokenNameFromTxHash(txHash) {
+
+    try {
+      const txReceipt = await this.web3.eth.getTransactionReceipt(txHash);
+      for (const log of txReceipt.logs) {
+        console.log("log",log);
+      
+      }
+      return txReceipt.contractAddress;
+    } catch (error) {
+      console.error(`Error getting token name: ${error}`);
+    }
+  }
 }
