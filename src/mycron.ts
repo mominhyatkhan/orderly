@@ -35,20 +35,22 @@ export class MyCronJob {
         );
         console.log(newtransaction, wallet.address);
         let tokenName: any;
-        await this.telegramBot.sendMessage(tokenName, userdata.telegramName);
-        console.log('ill send notification to the user');
         if (newtransaction) {
           tokenName = await this.userWallet.getTokenNameFromTxHash(
             newtransaction.hash,
-          );
-          console.log('hehe',tokenName)
-          if(wallet.isemail)
-          {
-            console.log('i will send notification to email')
+            );
+              
+            await this.telegramBot.sendMessage(newtransaction, userdata.telegramName);
+            console.log('ill send notification to the user');
+            console.log('hehe',tokenName)
+            if(wallet.isemail)
+            {
+              console.log('i will send notification to email')
+            }
+            
+            if (wallet.istelegram) {
+            
           }
-        
-          /* if (wallet.istelegram) {
-          } */
         }
       });
     });
