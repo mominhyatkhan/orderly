@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { SignupService } from './signup/signup.service';
+import { TelegramService } from './telegramBot/telegram.service';
 import { WalletService } from './wallets/wallets.service';
 
 @Injectable()
@@ -12,6 +13,8 @@ export class MyCronJob {
     private user: SignupService,
     @Inject(WalletService)
     private userWallet: WalletService,
+    @Inject(TelegramService)
+    private telegramBot: TelegramService,
   ) {}
 
   @Cron(CronExpression.EVERY_MINUTE)
@@ -28,10 +31,25 @@ export class MyCronJob {
       const walletinfo = await this.userWallet.getWalletsByEmail(email);
       walletinfo.map(async (wallet) => {
         const newtransaction = await this.userWallet.getLatestTransaction(
-          "0x996051216C33fD54C4602675810FF5B52b3CF8ff",
+          wallet.address,
         );
-        const tokenName=await this.userWallet.getTokenNameFromTxHash(newtransaction.hash)
-        console.log(newtransaction)
+        console.log(newtransaction, wallet.address);
+        let tokenName: any;
+        await this.telegramBot.sendMessage(tokenName, userdata.telegramName);
+        console.log('ill send notification to the user');
+        if (newtransaction) {
+          tokenName = await this.userWallet.getTokenNameFromTxHash(
+            newtransaction.hash,
+          );
+          console.log('hehe',tokenName)
+          if(wallet.isemail)
+          {
+            console.log('i will send notification to email')
+          }
+        
+          /* if (wallet.istelegram) {
+          } */
+        }
       });
     });
     console.log('Cron job completed');

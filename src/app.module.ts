@@ -21,6 +21,7 @@ import { GroupListModule } from './group_list/groupList.module';
 import { Module } from '@nestjs/common';
 import { ScheduleModule } from '@nestjs/schedule';
 import { MyCronJob } from './mycron';
+import { TelegramModule } from './telegramBot/telegram.module';
 @Module({
   imports: [
     MongooseModule.forRoot(
@@ -35,6 +36,7 @@ import { MyCronJob } from './mycron';
     ContactModule,
     AuthModule,
     GroupModule,
+    TelegramModule,
     GroupListModule,
     TransactionsModule,
     InvestmentModule,
