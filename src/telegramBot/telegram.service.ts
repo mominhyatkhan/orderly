@@ -16,15 +16,17 @@ export class TelegramService {
       '5768791506:AAEX7AS1vJtJLlwEsCE-KnGv7WCCCs_dCBk',
       { polling: true },
     )),
-      this.telegramBot.on('message', this.handleMessage.bind(this)  );
-      this.telegramBot.on('callback_query', (query) => {
-        // The `data` property of the `query` object contains the `callback_data`
-        // that was attached to the button
-        const response = query.data;
-      
-        // Log the response to the console
-        console.log(response);
-      });
+      this.telegramBot.on('message', this.handleMessage.bind(this));
+    this.telegramBot.on('callback_query', (query) => {
+      // The `data` property of the `query` object contains the `callback_data`
+      // that was attached to the button
+      const response = query.data;
+      const id=query.message.chat.id
+      if (response != 'rejected') {
+       /* this.telegramBot.editMessageText(id, "Thank you for Your Response"); */
+        console.log(query);
+      }
+    });
   }
 
   async sendMessage(message: any, user: string): Promise<any> {
@@ -73,7 +75,7 @@ export class TelegramService {
       'im username',
       message.chat.username,
     );
-    console.log(this.telegramBot)
+    console.log(this.telegramBot);
     if (text === '/start') {
       await this.telegramBot.sendMessage(
         chatId,
