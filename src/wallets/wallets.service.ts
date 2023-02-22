@@ -92,7 +92,7 @@ export class WalletService {
     try {
       const txReceipt = await this.web3.eth.getTransactionReceipt(txHash);
       for (const log of txReceipt.logs) {
-        console.log("log",log);
+        console.log("logme",log);
       }
       return txReceipt;
     } catch (error) {

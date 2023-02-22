@@ -7,10 +7,11 @@ export class TelegramService {
   private readonly Telegram_Bot_API =
     '5768791506:AAEX7AS1vJtJLlwEsCE-KnGv7WCCCs_dCBk';
   private telegramBot: TelegramBot;
-
+  private messageArray:any[]
   constructor(
     @Inject(MonitorService)
-    private monitorservice: MonitorService,) {
+    private monitorservice: MonitorService,
+  ) {
     (this.telegramBot = new TelegramBot(
       '5768791506:AAEX7AS1vJtJLlwEsCE-KnGv7WCCCs_dCBk',
       { polling: true },
@@ -23,16 +24,11 @@ export class TelegramService {
       const response = JSON.parse(query.data);
       const id = query.message.chat.id;
       const messageId = query.message.message_id;
-      console.log(
-        'im response',
-        response.contract,
-        response.chain,
-        query.from.id,
-      );
+      
       if (response != 'rejected') {
         monitorservice.addMonitor(
           query.from.id,
-          response.contract,
+          response.messageId,
           response.chain,
         );
         console.log('im contract', query.from.id);
@@ -46,6 +42,7 @@ export class TelegramService {
     });
   }
   async sendMessage(
+    contractAddress: string,
     message: any,
     user: string,
     chaindata: string,
@@ -55,8 +52,9 @@ export class TelegramService {
       const userId = '5837866743'; // replace with the user's chat ID
 
       console.log('im message', message);
-      if (message.contractAddress) {
-        const response = await this.telegramBot
+      if (contractAddress) {
+        this.messageArray.push({contractAddress:contractAddress,chainId:chaindata,messageid:message.timeStamp})
+        await this.telegramBot
           .sendMessage(userId, message.hash, {
             reply_markup: {
               inline_keyboard: [
@@ -64,7 +62,7 @@ export class TelegramService {
                   {
                     text: 'Accept',
                     callback_data: JSON.stringify({
-                      contract: message.contractAddress,
+                      messageId:message.timeStamp,
                       chain: chaindata,
                     }),
                   },
@@ -81,8 +79,6 @@ export class TelegramService {
           .then(() => {
             console.log('Message sent to user');
           });
-        console.log('telegram response', response.callback_data);
-        return response;
       }
     } catch (error) {
       console.error('im telegram error', error);

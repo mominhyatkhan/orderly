@@ -31,21 +31,32 @@ export class MyCronJob {
       const walletinfo = await this.userWallet.getWalletsByEmail(email);
       walletinfo.map(async (wallet) => {
         const newtransaction = await this.userWallet.getLatestTransaction(
-          '0xa5d7bba71cc0f388b973a25e9b50a44d47ba226f',
+          '0x95222290DD7278Aa3Ddd389Cc1E1d165CC4BAfe5',
         );
-        console.log(newtransaction, wallet.address);
+     console.log(newtransaction);
+     
         let tokenName: any;
         if (newtransaction) {
           tokenName = await this.userWallet.getTokenNameFromTxHash(
             newtransaction.hash,
           );
+         let contractAddress:string=''
+         console.log('log address',tokenName)
+         tokenName.logs.map((log)=>{
+          console.log('log address mine',log)
+            if(log.topics[0]=="0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef")
+            {
+              contractAddress=log.address
+            }
+          })
+          console.log('im contract address',contractAddress)
           await this.telegramBot.sendMessage(
+            contractAddress,
             newtransaction,
             userdata.telegramName,
             wallet.chain
           );
-          console.log('ill send notification to the user');
-          console.log('hehe', tokenName);
+       
 
           if (wallet.isemail) {
             console.log('i will send notification to email');
