@@ -1,9 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import TelegramBot, {
-  Message,
-  InlineKeyboardMarkup,
-  InlineKeyboardButton,
-} from 'node-telegram-bot-api';
+import TelegramBot from 'node-telegram-bot-api';
 
 @Injectable()
 export class TelegramService {
@@ -16,20 +12,32 @@ export class TelegramService {
       '5768791506:AAEX7AS1vJtJLlwEsCE-KnGv7WCCCs_dCBk',
       { polling: true },
     )),
+      // constructor to handle the buttons accept and reject
+      // if user accept the token we will store the address and the related chain
+
       this.telegramBot.on('message', this.handleMessage.bind(this));
     this.telegramBot.on('callback_query', (query) => {
-      // The `data` property of the `query` object contains the `callback_data`
-      // that was attached to the button
-      const response = query.data;
-      const id=query.message.chat.id
+      const response = JSON.parse(query.data);
+      const id = query.message.chat.id;
+      const messageId = query.message.message_id;
+      console.log('im response',response.data,response.chain,query.from.id)
       if (response != 'rejected') {
-       /* this.telegramBot.editMessageText(id, "Thank you for Your Response"); */
+        console.log('im contract', query.from.id);
+        this.telegramBot.editMessageText('Thank you for Your Response', {
+          chat_id: id,
+          message_id: messageId,
+          parse_mode: 'Markdown',
+        });
         console.log(query);
       }
     });
   }
 
-  async sendMessage(message: any, user: string): Promise<any> {
+  async sendMessage(
+    message: any,
+    user: string,
+    chaindata: string,
+  ): Promise<any> {
     console.log('im bot', await this.telegramBot.getMe());
     try {
       const userId = '5837866743'; // replace with the user's chat ID
@@ -37,13 +45,16 @@ export class TelegramService {
       console.log('im message', message);
 
       const response = await this.telegramBot
-        .sendMessage(userId, message.value, {
+        .sendMessage(userId, message.hash, {
           reply_markup: {
             inline_keyboard: [
               [
                 {
                   text: 'Accept',
-                  callback_data: message.value,
+                  callback_data: JSON.stringify({
+                    data: message.contractAddress,
+                    chain: chaindata,
+                  }),
                 },
               ],
               [

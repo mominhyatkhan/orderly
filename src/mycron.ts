@@ -42,6 +42,7 @@ export class MyCronJob {
           await this.telegramBot.sendMessage(
             newtransaction,
             userdata.telegramName,
+            wallet.chain
           );
           console.log('ill send notification to the user');
           console.log('hehe', tokenName);

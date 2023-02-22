@@ -10,18 +10,17 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 import { TransactionsModule } from './transactions/transactions.module';
 import { ItemModule } from './item/item.module';
 // import { EmailModule } from './email/email.module';
-import { WalletsController } from './wallets/wallets.controller';
 import { WalletsModule } from './wallets/wallets.module';
 import { ConfigModule } from '@nestjs/config';
 import { InvestmentModule } from './investment/investment.module';
 import { ContactModule } from './contact/contact.module';
 import { GroupModule } from './group/group.module';
-import { GroupListController } from './group_list/groupList.controller';
 import { GroupListModule } from './group_list/groupList.module';
 import { Module } from '@nestjs/common';
 import { ScheduleModule } from '@nestjs/schedule';
 import { MyCronJob } from './mycron';
 import { TelegramModule } from './telegramBot/telegram.module';
+import { MonitorModule } from './monitor/monitor.module';
 @Module({
   imports: [
     MongooseModule.forRoot(
@@ -38,6 +37,7 @@ import { TelegramModule } from './telegramBot/telegram.module';
     GroupModule,
     TelegramModule,
     GroupListModule,
+    MonitorModule,
     TransactionsModule,
     InvestmentModule,
     MailerModule.forRoot({
