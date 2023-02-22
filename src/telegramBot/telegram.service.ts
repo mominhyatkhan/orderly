@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import TelegramBot from 'node-telegram-bot-api';
+import { MonitorService } from 'src/monitor/monitor.service';
 
 @Injectable()
 export class TelegramService {
@@ -7,7 +8,9 @@ export class TelegramService {
     '5768791506:AAEX7AS1vJtJLlwEsCE-KnGv7WCCCs_dCBk';
   private telegramBot: TelegramBot;
 
-  constructor() {
+  constructor(
+    @Inject(MonitorService)
+    private monitorservice: MonitorService,) {
     (this.telegramBot = new TelegramBot(
       '5768791506:AAEX7AS1vJtJLlwEsCE-KnGv7WCCCs_dCBk',
       { polling: true },
@@ -20,8 +23,18 @@ export class TelegramService {
       const response = JSON.parse(query.data);
       const id = query.message.chat.id;
       const messageId = query.message.message_id;
-      console.log('im response',response.data,response.chain,query.from.id)
+      console.log(
+        'im response',
+        response.contract,
+        response.chain,
+        query.from.id,
+      );
       if (response != 'rejected') {
+        monitorservice.addMonitor(
+          query.from.id,
+          response.contract,
+          response.chain,
+        );
         console.log('im contract', query.from.id);
         this.telegramBot.editMessageText('Thank you for Your Response', {
           chat_id: id,
@@ -32,7 +45,6 @@ export class TelegramService {
       }
     });
   }
-
   async sendMessage(
     message: any,
     user: string,
@@ -43,34 +55,35 @@ export class TelegramService {
       const userId = '5837866743'; // replace with the user's chat ID
 
       console.log('im message', message);
-
-      const response = await this.telegramBot
-        .sendMessage(userId, message.hash, {
-          reply_markup: {
-            inline_keyboard: [
-              [
-                {
-                  text: 'Accept',
-                  callback_data: JSON.stringify({
-                    data: message.contractAddress,
-                    chain: chaindata,
-                  }),
-                },
+      if (message.contractAddress) {
+        const response = await this.telegramBot
+          .sendMessage(userId, message.hash, {
+            reply_markup: {
+              inline_keyboard: [
+                [
+                  {
+                    text: 'Accept',
+                    callback_data: JSON.stringify({
+                      contract: message.contractAddress,
+                      chain: chaindata,
+                    }),
+                  },
+                ],
+                [
+                  {
+                    text: 'Reject',
+                    callback_data: 'rejected',
+                  },
+                ],
               ],
-              [
-                {
-                  text: 'Reject',
-                  callback_data: 'rejected',
-                },
-              ],
-            ],
-          },
-        })
-        .then(() => {
-          console.log('Message sent to user');
-        });
-      console.log('telegram response', response.callback_data);
-      return response;
+            },
+          })
+          .then(() => {
+            console.log('Message sent to user');
+          });
+        console.log('telegram response', response.callback_data);
+        return response;
+      }
     } catch (error) {
       console.error('im telegram error', error);
     }

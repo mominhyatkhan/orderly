@@ -12,5 +12,6 @@ import { MonitorService } from './monitor.service';
   ],
   controllers: [MonitorController],
   providers: [MonitorService],
+  exports: [MonitorService],
 })
 export class MonitorModule {}
