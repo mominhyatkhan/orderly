@@ -9,9 +9,15 @@ export class MonitorService {
     @InjectModel('Monitor')
     private monitorModel: Model<MonitorDto>,
   ) {}
-  async addMonitor(telegramId: string, contractAddress: string, chain: string) {
-    try {   
+  async addMonitor(
+    telegramId: string,
+    contractAddress: string,
+    chain: string,
+    email: string,
+  ) {
+    try {
       const monitor = new this.monitorModel({
+        email: email,
         telegramId: telegramId,
         chain: chain,
         contractAddress: contractAddress,
@@ -28,15 +34,17 @@ export class MonitorService {
       .exec();
     if (monitor) return Promise.resolve(monitor);
     else
-      return Promise.reject(new Error('Invalid Email! Or no Group added yet '));
+      return Promise.reject(new Error('Invalid Email! Or no monitor added yet '));
   }
   async deleteFromMonitor(
+    email: string,
     telegramId: string,
     contractAddress: string,
     chain: string,
   ): Promise<MonitorDto> {
     const monitor: any = await this.monitorModel
       .deleteOne({
+        email: email,
         telegramId: telegramId,
         chain: chain,
         contractAddress: contractAddress,
@@ -44,6 +52,6 @@ export class MonitorService {
       .exec();
     if (monitor) return Promise.resolve(monitor);
     else
-      return Promise.reject(new Error('Invalid Email! Or no Group added yet '));
+      return Promise.reject(new Error('Invalid Email! Or no monitor added yet '));
   }
 }

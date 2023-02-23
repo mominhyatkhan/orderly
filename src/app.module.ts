@@ -21,6 +21,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { MyCronJob } from './mycron';
 import { TelegramModule } from './telegramBot/telegram.module';
 import { MonitorModule } from './monitor/monitor.module';
+import { EmailbotModule } from './emailbot/emailbot.module';
 @Module({
   imports: [
     MongooseModule.forRoot(
@@ -38,6 +39,7 @@ import { MonitorModule } from './monitor/monitor.module';
     TelegramModule,
     GroupListModule,
     MonitorModule,
+    EmailbotModule,
     TransactionsModule,
     InvestmentModule,
     MailerModule.forRoot({

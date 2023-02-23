@@ -33,6 +33,7 @@ export class TelegramService {
           query.from.id,
           result.contractAddress,
           result.chainId,
+          result.email
         );
         console.log('im contract', query.from.id);
         this.telegramBot.editMessageText('Thank you for Your Response', {
@@ -49,6 +50,7 @@ export class TelegramService {
     message: any,
     user: string,
     chaindata: string,
+    email:string
   ): Promise<any> {
     console.log('im bot', await this.telegramBot.getMe());
     try {
@@ -60,6 +62,7 @@ export class TelegramService {
           contractAddress: contractAddress,
           chainId: chaindata,
           messageid: message.timeStamp,
+          email:email
         });
         this.telegramBot
           .sendMessage(userId, message.hash, {

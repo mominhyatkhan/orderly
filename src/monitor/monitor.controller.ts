@@ -25,27 +25,37 @@ export class MonitorController {
   //   return this.signupService.findByEmail(email);
   // }
 
-  @Post('add-group-list')
-  async addGroup(@Body() monitor: MonitorDto) {
-    const { telegramId,chain, contractAddress } = monitor;
+  @Post('add-monitor-list')
+  async addMonitor(
+    @Query('email') email: string,
+    @Query('telegram') telegramId: string,
+    @Query('chain') chain: string,
+    @Query('contractAddress') contractAddress: string,
+  ) {
     console.log(telegramId, contractAddress);
 
-    await this.monitorService.addMonitor(telegramId, contractAddress,chain);
+    await this.monitorService.addMonitor(
+      telegramId,
+      contractAddress,
+      chain,
+      email,
+    );
 
     // await createdWallet.save();
     return 'Data stored in array successfully';
   }
 
-  @Get('get-group-list')
+  @Get('get-monitor-list')
   async getGroup(@Query('email') email: string) {
     return this.monitorService.getMonitorAddress(email);
   }
   @Post('delete-from-group-list')
-  async deleteFromGroupList(
-    @Query('telegramId') telegramId: string,
-    @Query('contractAddress') contractAddress: string,
-    @Query('chainId') chain:string
-  ) {
-    return this.monitorService.deleteFromMonitor(telegramId, contractAddress,chain);
+  async deleteFromGroupList(@Body() data: MonitorDto) {
+    return this.monitorService.deleteFromMonitor(
+      data.email,
+      data.telegramId,
+      data.contractAddress,
+      data.chain,
+    );
   }
 }

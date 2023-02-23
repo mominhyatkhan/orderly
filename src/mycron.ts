@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import { EmailbotService } from './emailbot/emailbot.service';
 import { SignupService } from './signup/signup.service';
 import { TelegramService } from './telegramBot/telegram.service';
 import { WalletService } from './wallets/wallets.service';
@@ -15,6 +16,8 @@ export class MyCronJob {
     private userWallet: WalletService,
     @Inject(TelegramService)
     private telegramBot: TelegramService,
+    @Inject(EmailbotService)
+    private emailbot: EmailbotService,
   ) {}
 
   @Cron(CronExpression.EVERY_MINUTE)
@@ -27,15 +30,18 @@ export class MyCronJob {
     console.log('Cron job started');
     const data = await this.user.getAllData();
     data.map(async (userdata) => {
+      //one by one iterating all the users
       let email = userdata.email;
-      const walletinfo = await this.userWallet.getWalletsByEmail(email);
+      const walletinfo = await this.userWallet.getWalletsByEmail(email); //get wallets from the database using email of the user
       walletinfo.map(async (wallet) => {
+        //one by one get the latest transaction of each walllet by its wallet address
         const newtransaction = await this.userWallet.getLatestTransaction(
           wallet.address,
         );
         console.log(newtransaction);
 
         let tokenName: any;
+        //if latest transaction exist then we get its transfer script for the contract address
         if (newtransaction) {
           tokenName = await this.userWallet.getTokenNameFromTxHash(
             newtransaction.hash,
@@ -43,6 +49,7 @@ export class MyCronJob {
           let contractAddress: string = '';
           console.log('log address', tokenName);
           tokenName.logs.map((log) => {
+            //one by one iterate logs to check if the transfer function is called if it does we get the contract address for the notification
             console.log('log address mine', log);
             if (
               log.topics[0] ==
@@ -52,16 +59,24 @@ export class MyCronJob {
             }
           });
           console.log('im contract address', contractAddress);
+          //if user turned on the email notification we send the user notification about token along with its address
           if (wallet.isemail) {
-            console.log('i will send notification to email');
+            this.emailbot.sendEmailNotification(
+              userdata.email,
+              newtransaction,
+              userdata.telegramName,
+              wallet.chain,
+              contractAddress,
+            );
           }
-
+          //if user turned on the telegram notification we send the user notification about token along with its address
           if (wallet.istelegram) {
-            await this.telegramBot.sendMessage(
+            this.telegramBot.sendMessage(
               contractAddress,
               newtransaction,
               userdata.telegramName,
               wallet.chain,
+              userdata.email,
             );
           }
         }

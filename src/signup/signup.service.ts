@@ -58,9 +58,7 @@ export class SignupService {
                   <a href="http://localhost:8000/signup/verify?token=${token}">http://localhost:8000/verify?token=${token}</a>
                     </p>`,
       };
-      this.secret = token;
-
-      // send the email
+      
       await sendgrid.send(message);
     } catch (error) {
       console.log('error in send grid', error);
