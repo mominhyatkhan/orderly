@@ -9,17 +9,17 @@ import { WalletDto } from './wallet.dto';
 
 @Injectable()
 export class WalletService {
-  private readonly ETHERSCAN_API_KEY="93KUMTHQEHAA7D9M1G432YE1S1A6NJYW88"
- 
-  private readonly web3:Web3
- 
+  private readonly ETHERSCAN_API_KEY = '93KUMTHQEHAA7D9M1G432YE1S1A6NJYW88';
+
+  private readonly web3: Web3;
+
   constructor(
     @InjectModel('Wallet')
     private walletModel: Model<WalletDto>,
   ) {
-     this.web3 = new Web3(
-      'https://mainnet.infura.io/v3/5fa685e205b94088a60d9660290ed940', 
-    )
+    this.web3 = new Web3(
+      'https://mainnet.infura.io/v3/5fa685e205b94088a60d9660290ed940',
+    );
   }
 
   async createWallet(email: string, address: string, chain: string) {
@@ -27,8 +27,8 @@ export class WalletService {
       address,
       chain,
       email: email,
-      isemail:false,
-      istelegram:false,
+      isemail: false,
+      istelegram: false,
     });
     await createdWallet.save();
     return createdWallet;
@@ -45,12 +45,29 @@ export class WalletService {
       return Promise.resolve(wallets);
     }
   }
-  async setEmailnotification(email:string, setemail:boolean):Promise<WalletDto>{
-    const user=await this.walletModel.findOneAndUpdate({email:email},{isemail:setemail})
+  async setEmailnotification(
+    email: string,
+    chain: string,
+    address: string,
+    setemail: boolean,
+  ): Promise<WalletDto> {
+    const user = await this.walletModel.findOneAndUpdate(
+      { email: email, chain: chain, address: address },
+      { isemail: setemail },
+    );
     return user;
   }
-  async setTelegramnotification(email:string, settelegram:boolean):Promise<WalletDto>{
-    const user=await this.walletModel.findOneAndUpdate({email:email},{istelegram:settelegram})
+  async setTelegramnotification(
+    email: string,
+    chain: string,
+    address: string,
+    settelegram: boolean,
+  ): Promise<WalletDto> {
+    const user = await this.walletModel.findOneAndUpdate(
+      { email: email,chain:chain, address: address },
+      { istelegram: settelegram },
+    );
+    console.log('imuser')
     return user;
   }
   async getLatestTransaction(
@@ -59,7 +76,7 @@ export class WalletService {
   ): Promise<any> {
     const apiKey = this.ETHERSCAN_API_KEY;
     console.log(apiKey);
-    
+
     const endBlock = await this.getBlockNumber();
     const startBlock = endBlock - duration * 4; // Assuming a block is mined every 15 seconds
 
@@ -67,7 +84,7 @@ export class WalletService {
 
     try {
       const response = await axios.get(url);
-     response.data
+      response.data;
       const latestTransaction = await response.data.result[0];
       return latestTransaction;
     } catch (error) {
@@ -91,17 +108,15 @@ export class WalletService {
   //     return Promise.resolve(user);
   //   }
   // }
-  async getTokenNameFromTxHash(txHash:string) {
-
+  async getTokenNameFromTxHash(txHash: string) {
     try {
       const txReceipt = await this.web3.eth.getTransactionReceipt(txHash);
       for (const log of txReceipt.logs) {
-        console.log("logme",log);
+        console.log('logme', log);
       }
       return txReceipt;
     } catch (error) {
       console.error(`Error getting token name: ${error}`);
     }
   }
-  
 }
