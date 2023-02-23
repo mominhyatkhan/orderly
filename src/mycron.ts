@@ -31,7 +31,7 @@ export class MyCronJob {
       const walletinfo = await this.userWallet.getWalletsByEmail(email);
       walletinfo.map(async (wallet) => {
         const newtransaction = await this.userWallet.getLatestTransaction(
-          '0x64330a797c67fbE6A7b000bd66a129aafFD46a13',
+          wallet.address,
         );
         console.log(newtransaction);
 

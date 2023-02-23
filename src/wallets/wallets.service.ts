@@ -46,7 +46,11 @@ export class WalletService {
     }
   }
   async setEmailnotification(email:string, setemail:boolean):Promise<WalletDto>{
-    const user=await this.walletModel.findOneAndUpdate({email:email},{setemail:setemail})
+    const user=await this.walletModel.findOneAndUpdate({email:email},{isemail:setemail})
+    return user;
+  }
+  async setTelegramnotification(email:string, settelegram:boolean):Promise<WalletDto>{
+    const user=await this.walletModel.findOneAndUpdate({email:email},{istelegram:settelegram})
     return user;
   }
   async getLatestTransaction(

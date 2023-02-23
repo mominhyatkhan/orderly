@@ -31,7 +31,10 @@ export class WalletsController {
   async setEmailNotification(@Query('email') email:string,@Query('isEmail') isEmail:boolean){
     const user=await this.walletService.setEmailnotification(email,isEmail);
   }
-
+  @Post('set-telegram-notification')
+  async setTelegramNotification(@Query('email') email:string,@Query('isTelegram') isTelegram:boolean){
+    const user=await this.walletService.setTelegramnotification(email,isTelegram);
+  }
   @Get('get-wallets')
   async getWalletsByEmail(@Query('email') email: string) {
     return await this.walletService.getWalletsByEmail(email);
