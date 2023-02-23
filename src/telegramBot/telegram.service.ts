@@ -7,7 +7,7 @@ export class TelegramService {
   private readonly Telegram_Bot_API =
     '5768791506:AAEX7AS1vJtJLlwEsCE-KnGv7WCCCs_dCBk';
   private telegramBot: TelegramBot;
-  private messageArray:any[]
+  private messageArray: any[];
   constructor(
     @Inject(MonitorService)
     private monitorservice: MonitorService,
@@ -20,16 +20,19 @@ export class TelegramService {
       // if user accept the token we will store the address and the related chain
 
       this.telegramBot.on('message', this.handleMessage.bind(this));
+    this.messageArray = [];
+
     this.telegramBot.on('callback_query', (query) => {
       const response = JSON.parse(query.data);
       const id = query.message.chat.id;
       const messageId = query.message.message_id;
-      
+
       if (response != 'rejected') {
+        const result = this.messageArray.find(item => item.messageid === response.messageId,);
         monitorservice.addMonitor(
           query.from.id,
-          response.messageId,
-          response.chain,
+          result.contractAddress,
+          result.chainId,
         );
         console.log('im contract', query.from.id);
         this.telegramBot.editMessageText('Thank you for Your Response', {
@@ -53,8 +56,12 @@ export class TelegramService {
 
       console.log('im message', message);
       if (contractAddress) {
-        this.messageArray.push({contractAddress:contractAddress,chainId:chaindata,messageid:message.timeStamp})
-        await this.telegramBot
+        this.messageArray.push({
+          contractAddress: contractAddress,
+          chainId: chaindata,
+          messageid: message.timeStamp,
+        });
+        this.telegramBot
           .sendMessage(userId, message.hash, {
             reply_markup: {
               inline_keyboard: [
@@ -62,7 +69,7 @@ export class TelegramService {
                   {
                     text: 'Accept',
                     callback_data: JSON.stringify({
-                      messageId:message.timeStamp,
+                      messageId: String(message.timeStamp),
                       chain: chaindata,
                     }),
                   },
@@ -99,7 +106,7 @@ export class TelegramService {
     if (text === '/start') {
       await this.telegramBot.sendMessage(
         chatId,
-        `Hello, ${username}! Welcome to my bot!`,
+        `Hello, ${username}! Welcome to my Ordelybot!`,
       );
     }
   }

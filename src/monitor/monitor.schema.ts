@@ -10,7 +10,7 @@ export class Monitor extends Document {
   @Prop({ required: true})
   chain: string;
 
-  @Prop({ required: true})
+  @Prop({ })
   contractAddress: string;
 }
 

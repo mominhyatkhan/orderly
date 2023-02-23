@@ -31,38 +31,38 @@ export class MyCronJob {
       const walletinfo = await this.userWallet.getWalletsByEmail(email);
       walletinfo.map(async (wallet) => {
         const newtransaction = await this.userWallet.getLatestTransaction(
-          '0x95222290DD7278Aa3Ddd389Cc1E1d165CC4BAfe5',
+          '0x64330a797c67fbE6A7b000bd66a129aafFD46a13',
         );
-     console.log(newtransaction);
-     
+        console.log(newtransaction);
+
         let tokenName: any;
         if (newtransaction) {
           tokenName = await this.userWallet.getTokenNameFromTxHash(
             newtransaction.hash,
           );
-         let contractAddress:string=''
-         console.log('log address',tokenName)
-         tokenName.logs.map((log)=>{
-          console.log('log address mine',log)
-            if(log.topics[0]=="0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef")
-            {
-              contractAddress=log.address
+          let contractAddress: string = '';
+          console.log('log address', tokenName);
+          tokenName.logs.map((log) => {
+            console.log('log address mine', log);
+            if (
+              log.topics[0] ==
+              '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
+            ) {
+              contractAddress = log.address;
             }
-          })
-          console.log('im contract address',contractAddress)
-          await this.telegramBot.sendMessage(
-            contractAddress,
-            newtransaction,
-            userdata.telegramName,
-            wallet.chain
-          );
-       
-
+          });
+          console.log('im contract address', contractAddress);
           if (wallet.isemail) {
             console.log('i will send notification to email');
           }
 
           if (wallet.istelegram) {
+            await this.telegramBot.sendMessage(
+              contractAddress,
+              newtransaction,
+              userdata.telegramName,
+              wallet.chain,
+            );
           }
         }
       });

@@ -10,13 +10,17 @@ export class MonitorService {
     private monitorModel: Model<MonitorDto>,
   ) {}
   async addMonitor(telegramId: string, contractAddress: string, chain: string) {
-    const monitor = new this.monitorModel({
-      telegramId: telegramId,
-      chain: chain,
-      contractAddress: contractAddress,
-    });
-    await monitor.save();
-    return monitor;
+    try {   
+      const monitor = new this.monitorModel({
+        telegramId: telegramId,
+        chain: chain,
+        contractAddress: contractAddress,
+      });
+      await monitor.save();
+      return monitor;
+    } catch (error) {
+      console.log('Contract Address already exist');
+    }
   }
   async getMonitorAddress(telegramId: string): Promise<MonitorDto> {
     const monitor: any = await this.monitorModel
