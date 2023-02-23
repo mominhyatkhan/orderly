@@ -11,6 +11,12 @@ export class Wallet extends Document {
   chain: string;
 
   @Prop({ required: true })
+  istelegram: boolean;
+
+  @Prop({ required: true })
+  isemail: boolean;
+
+  @Prop({ required: true })
   email: string;
 }
 

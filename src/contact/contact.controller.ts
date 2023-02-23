@@ -45,4 +45,13 @@ export class ContactController {
   async getContacts(@Query('email') email: string) {
     return this.contactservice.getContacts(email);
   }
+  @Get('get-contact-by-address')
+  async getContactByAddress(@Query('email') email: string,@Query('contactAddress') contactAddress:string) {
+    return this.contactservice.getContactByAddress(email,contactAddress);
+  }
+  @Post('delete-contact')
+  async deleteContact(@Query('email') email:string,@Query('address') address:string ){
+    console.log(email,address)
+    return this.contactService.deleteContact(email,address);
+  }
 }

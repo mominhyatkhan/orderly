@@ -5,6 +5,8 @@ import { Document } from 'mongoose';
 export class Signup {
   @Prop({ unique: true })
   email: string;
+  @Prop()
+  telegramName:string
   @Prop({ default: null })
   password: string;
   @Prop({ unique: true })

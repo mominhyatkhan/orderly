@@ -46,4 +46,35 @@ export class GroupController {
   async getGroup(@Query('email') email: string,@Query('name') name:string) {
     return this.groupservice.getGroup(email,name);
   }
+  @Post('delete-member')
+  async deleteMember(@Body() member:GroupDto) {
+    const { email, name, contactAddress } = member;
+    try {
+      await this.groupService.deleteMember(email,name,contactAddress);
+ 
+    } catch (error) {
+      return error
+    }
+    
+  }
+  @Post('delete-from-groups')
+  async deleteMemberFromAllGroups(@Query('email') email:string,@Query('address') address:string ) {
+    
+    try {
+      await this.groupService.deleteMemberFromAllGroups(email,address);
+ 
+    } catch (error) {
+      return error
+    }
+  }
+  @Post('delete-group')
+  async deletegroup(@Query('email') email:string,@Query('name') name:string ) {
+    
+    try {
+      await this.groupService.deleteGroup(email,name);
+ 
+    } catch (error) {
+      return error
+    }
+  }
 }

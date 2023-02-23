@@ -58,9 +58,7 @@ export class SignupService {
                   <a href="http://localhost:8000/signup/verify?token=${token}">http://localhost:8000/verify?token=${token}</a>
                     </p>`,
       };
-      this.secret = token;
-
-      // send the email
+      
       await sendgrid.send(message);
     } catch (error) {
       console.log('error in send grid', error);
@@ -138,7 +136,16 @@ export class SignupService {
       return Promise.resolve(user);
     }
   }
-  // async findByEmail(email: string): Promise<StoredSignup> {
-  //   return await this.signupModel.findOne({ email }).exec();
-  // }
+  
+  async getAllData():Promise<SignupModel[]> {
+    try {
+      console.log("imhere")
+    const user=  this.signupModel.find().exec();
+    console.log(user);
+      return user
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
 }

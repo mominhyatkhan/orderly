@@ -26,4 +26,17 @@ export class ContactService {
         new Error('Invalid Email! No Contacts found for this email'),
       );
   }
+  async getContactByAddress(email: string,contactAddress:string): Promise<ContactDto> {
+    const contact: any = await this.contactModel.find({ email: email,address:contactAddress }).exec();
+    if (contact) return Promise.resolve(contact);
+    else
+      return Promise.reject(
+        new Error('Invalid Email! No Contacts found for this email'),
+      );
+  }
+  async deleteContact(email:string,contactaddress:string) {
+   const response:any= await this.contactModel.deleteOne({address:contactaddress,email:email}).exec();
+   console.log(response)
+  }
 }
+

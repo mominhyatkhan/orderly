@@ -31,5 +31,6 @@ import { SignupSchema } from '../signup/signup.model';
   ],
   controllers: [WalletsController],
   providers: [WalletService],
+  exports: [WalletService],
 })
 export class WalletsModule {}
