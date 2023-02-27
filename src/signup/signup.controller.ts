@@ -107,4 +107,23 @@ export class SignupController {
   roleData2(@Request() req): string {
     return 'You are allowed to access role 2';
   }
+  @Post('update-notification')
+  async setEthereumNotification(
+    @Query('email') email: string,
+    @Query('isEthereum') isEthereum: boolean,
+    @Query('chain') chainId:string
+  ) {
+    try {
+
+      const user = await this.signupService.setNotification(
+        email,
+        isEthereum,
+        chainId,
+      );
+      return user;
+    } catch (error) {
+      return error;
+    }
+  }
+  
 }

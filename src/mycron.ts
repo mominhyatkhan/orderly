@@ -35,11 +35,17 @@ export class MyCronJob {
       const walletinfo = await this.userWallet.getWalletsByEmail(email); //get wallets from the database using email of the user
       walletinfo.map(async (wallet) => {
         //one by one get the latest transaction of each walllet by its wallet address
-        const newtransaction = await this.userWallet.getLatestTransaction(
-          wallet.address,
-        );
-        console.log(newtransaction);
-
+        let newtransaction;
+        //check which chain wallet is this one 
+        if (wallet.chain == '0x1') {
+          if (userdata.isEthereum) {
+            newtransaction = await this.userWallet.getLatestTransaction(
+              wallet.address,
+            );
+          }
+        }
+        console.log(userdata);
+        
         let tokenName: any;
         //if latest transaction exist then we get its transfer script for the contract address
         if (newtransaction) {
@@ -71,13 +77,15 @@ export class MyCronJob {
           }
           //if user turned on the telegram notification we send the user notification about token along with its address
           if (wallet.istelegram) {
-            this.telegramBot.sendMessage(
-              contractAddress,
-              newtransaction,
-              userdata.telegramName,
-              wallet.chain,
-              userdata.email,
-            );
+            if (contractAddress) {
+              this.telegramBot.sendMessage(
+                contractAddress,
+                newtransaction,
+                userdata.telegramName,
+                wallet.chain,
+                userdata.email,
+              );
+            }
           }
         }
       });

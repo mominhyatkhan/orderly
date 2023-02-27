@@ -33,6 +33,9 @@ export class SignupService {
       role: 'user',
       emailVerification: token,
       emailVerified: false,
+      isBsc: true,
+      isEthereum: true,
+      isPolygon: true,
     });
     try {
       await newUser.save();
@@ -58,7 +61,7 @@ export class SignupService {
                   <a href="http://localhost:8000/signup/verify?token=${token}">http://localhost:8000/verify?token=${token}</a>
                     </p>`,
       };
-      
+
       await sendgrid.send(message);
     } catch (error) {
       console.log('error in send grid', error);
@@ -136,16 +139,48 @@ export class SignupService {
       return Promise.resolve(user);
     }
   }
-  
-  async getAllData():Promise<SignupModel[]> {
+
+  async getAllData(): Promise<SignupModel[]> {
     try {
-      console.log("imhere")
-    const user=  this.signupModel.find().exec();
-    console.log(user);
-      return user
+      console.log('imhere');
+      const user = this.signupModel.find().exec();
+      console.log(user);
+      return user;
     } catch (err) {
       console.error(err);
     }
   }
-
+  async setNotification(
+    email: string,
+    isnotification: boolean,
+    chainId: string,
+  ): Promise<SignupModel> {
+    try {
+      let user: SignupModel;
+      if (chainId == '0x1') {
+        console.log('ethereum hit');
+        user = await this.signupModel.findOneAndUpdate(
+          { email: email },
+          { isEthereum: isnotification },
+        );
+      }
+      if (chainId == '0x38') {
+        console.log('bsc hit');
+        user = await this.signupModel.findOneAndUpdate(
+          { email: email },
+          { isBsc: isnotification },
+        );
+      }
+      if (chainId == '0x89') {
+        console.log('polygon hit');
+        user = await this.signupModel.findOneAndUpdate(
+          { email: email },
+          { isPolygon: isnotification },
+        );
+      }
+      return user;
+    } catch (error) {
+      return error;
+    }
+  }
 }

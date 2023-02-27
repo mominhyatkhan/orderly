@@ -6,7 +6,7 @@ export class Signup {
   @Prop({ unique: true })
   email: string;
   @Prop()
-  telegramName:string
+  telegramName: string;
   @Prop({ default: null })
   password: string;
   @Prop({ unique: true })
@@ -17,6 +17,12 @@ export class Signup {
   role: string;
   @Prop({ default: false })
   emailVerified: boolean;
+  @Prop({ default: true })
+  isBsc: boolean;
+  @Prop({ default: true })
+  isEthereum: boolean;
+  @Prop({ default: true })
+  isPolygon: boolean;
 }
 
 export type SignupModel = Signup & Document;
