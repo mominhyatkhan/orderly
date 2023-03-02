@@ -1,7 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { MonitorService } from 'src/monitor/monitor.service';
 import * as sendgrid from '@sendgrid/mail';
-const sendgridKey = process.env.SENDGRIDAPIKEY;
+import config from 'src/config';
+const sendgridKey = config.SENDGRIDAPIKEY;
 @Injectable()
 export class EmailbotService {
   constructor(

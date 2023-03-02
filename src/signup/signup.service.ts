@@ -7,9 +7,9 @@ import * as crypto from 'crypto';
 import { SignupDto } from './signup.dto';
 import * as sendgrid from '@sendgrid/mail';
 import { Router } from 'express';
+import config from '../config';
 
-const sendgridKey = process.env.SENDGRIDAPIKEY;
-
+const sendgridKey = config.SENDGRIDAPIKEY;
 // export interface StoredSignup {
 //   email: string;
 //   password: any;
