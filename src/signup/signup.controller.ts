@@ -77,9 +77,10 @@ export class SignupController {
   async setPassword(
     @Query('email') email: string,
     @Query('pass') password: string,
+    @Query('token') token: string,
   ) {
     if (this._token) {
-      return await this.signupService.setPassword(email, password, this._token);
+      return await this.signupService.setPassword(email, password, token);
     } else {
       console.log('CANNOT ACCESS THIS LINK WITHOUT SIGNING UP');
     }
