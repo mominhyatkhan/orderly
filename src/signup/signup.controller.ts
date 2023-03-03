@@ -45,17 +45,29 @@ export class SignupController {
   }
 
   @Get('/verify')
-  async verifyEmail(@Query('token') token: any, @Res() res) {
-    const verifiedUser = await this.signupService.verifyEmail(token);
+  async verifyEmail(
+    @Query('email') email: string,
+    @Query('token') token: string,
+    @Res() res,
+  ) {
+    const verifiedUser = await this.signupService.verifyEmail(email, token);
     if (verifiedUser) {
-      res.redirect('http://localhost:3000/passwordPage');
+      res.redirect(
+        `http://localhost:3000/passwordPage?email=${email}&token=${token}`,
+      );
       return verifiedUser;
     } else {
       console.log('Token not matched');
       return false;
     }
   }
-
+  @Get('verify-token')
+  async findbytoken(
+    @Query('email') email: string,
+    @Query('token') token: string,
+  ) {
+    return await this.signupService.getUserByToken(email, token);
+  }
   @Get('/fetch-verified-user')
   async findUserByEmail(@Query('email') email: string) {
     return await this.signupService.findUserByEmail(email);
@@ -63,11 +75,11 @@ export class SignupController {
 
   @Post('/set-password')
   async setPassword(
-    // @Body('token') token: any,
-    @Body('password') password: string,
+    @Query('email') email: string,
+    @Query('pass') password: string,
   ) {
     if (this._token) {
-      return await this.signupService.setPassword(password, this._token);
+      return await this.signupService.setPassword(email, password, this._token);
     } else {
       console.log('CANNOT ACCESS THIS LINK WITHOUT SIGNING UP');
     }
@@ -111,10 +123,9 @@ export class SignupController {
   async setEthereumNotification(
     @Query('email') email: string,
     @Query('isEthereum') isEthereum: boolean,
-    @Query('chain') chainId:string
+    @Query('chain') chainId: string,
   ) {
     try {
-
       const user = await this.signupService.setNotification(
         email,
         isEthereum,
@@ -125,5 +136,4 @@ export class SignupController {
       return error;
     }
   }
-  
 }

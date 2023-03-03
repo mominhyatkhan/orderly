@@ -68,8 +68,8 @@ export class SignupService {
     }
   }
 
-  async verifyEmail(token: any) {
-    const _user = await this.findUserByEmailToken(token);
+  async verifyEmail(email: string, token: any) {
+    const _user = await this.findUserByEmailToken(email, token);
 
     console.log('secret key: ', this.secret);
     console.log('------------------');
@@ -89,8 +89,8 @@ export class SignupService {
     }
   }
 
-  async setPassword(pass: string, token: any) {
-    const _user: SignupModel = await this.findUserByEmailToken(token);
+  async setPassword(email:string,pass: string, token: any) {
+    const _user: SignupModel = await this.findUserByEmailToken(email,token);
 
     console.log('Email verified!');
     _user.password = await bcrypt.hash(pass, 10);
@@ -116,9 +116,9 @@ export class SignupService {
     }
   }
 
-  async findUserByEmailToken(token: any): Promise<SignupModel> {
+  async findUserByEmailToken(email: string, token: any): Promise<SignupModel> {
     const user: SignupModel = await this.signupModel
-      .findOne({ emailVerification: token })
+      .findOne({ email: email, emailVerification: token })
       .exec();
     if (!user) {
       console.log('Invalid token! User not found');
@@ -139,7 +139,18 @@ export class SignupService {
       return Promise.resolve(user);
     }
   }
-
+async getUserByToken(email:string,token:string):Promise<SignupModel>
+{
+  const user: SignupModel = await this.signupModel
+      .findOne({ email: email,emailVerification:token })
+      .exec();
+    if (!user) {
+      console.log('Invalid Email! User not found');
+      return Promise.reject(new Error('Invalid Email! User not found'));
+    } else {
+      return Promise.resolve(user);
+    }
+}
   async getAllData(): Promise<SignupModel[]> {
     try {
       console.log('imhere');
